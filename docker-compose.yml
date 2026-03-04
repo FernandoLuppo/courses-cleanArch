@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: dot_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dot_network
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: dot_api
+    restart: always
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: yarn dev
+    networks:
+      - dot_network
+
+volumes:
+  postgres_data:
+
+networks:
+  dot_network:
+    driver: bridge
