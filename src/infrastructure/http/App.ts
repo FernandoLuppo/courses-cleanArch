@@ -1,9 +1,9 @@
 import express, { Application } from "express"
 import cors from "cors"
 import { userRoutes } from "./routes/user.routes"
-import { ErrorMiddleware } from "./middleware/ErrorMiddleware"
-import { PinoLogger } from "../../shared/logger/PinoLogger"
-import { RequestIdMiddleware } from "./middleware/RequestIdMiddleware"
+import { ErrorMiddleware } from "./middleware/Error.Middleware"
+import { RequestIdMiddleware } from "./middleware/RequestId.Middleware"
+import { PinoLogger } from "../providers/Logger.Provider"
 
 export class App {
   public readonly app: Application
