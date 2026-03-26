@@ -5,14 +5,16 @@ export class User {
   private _password: string
   private readonly _createdAt: Date
   private _updatedAt: Date
+  private _role: Role
 
-  constructor(
+  public constructor(
     id: string,
     name: string,
     email: string,
     password: string,
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    role: Role
   ) {
     this._id = id
     this._name = name
@@ -20,6 +22,7 @@ export class User {
     this._password = password
     this._createdAt = createdAt
     this._updatedAt = updatedAt
+    this._role = role
   }
 
   static restore(
@@ -28,9 +31,10 @@ export class User {
     email: string,
     password: string,
     createdAt: Date,
-    updatedAt: Date
+    updatedAt: Date,
+    role: Role
   ): User {
-    return new User(id, name, email, password, createdAt, updatedAt)
+    return new User(id, name, email, password, createdAt, updatedAt, role)
   }
 
   static create(
@@ -40,10 +44,20 @@ export class User {
     password: string
   ): User {
     const newDate = new Date()
-    return new User(id, name, email, password, newDate, newDate)
+    return new User(id, name, email, password, newDate, newDate, "USER")
   }
 
-  update(name: string, email: string, password: string): void {
+  static createAdmin(
+    id: string,
+    name: string,
+    email: string,
+    password: string
+  ): User {
+    const newDate = new Date()
+    return new User(id, name, email, password, newDate, newDate, "ADMIN")
+  }
+
+  public update(name: string, email: string, password: string): void {
     this._name = name
     this._email = email
     this._password = password
@@ -68,4 +82,9 @@ export class User {
   get updatedAt() {
     return this._updatedAt
   }
+  get role() {
+    return this._role
+  }
 }
+
+type Role = "ADMIN" | "USER"

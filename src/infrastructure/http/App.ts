@@ -4,6 +4,8 @@ import { userRoutes } from "./routes/user.routes"
 import { ErrorMiddleware } from "./middleware/Error.Middleware"
 import { RequestIdMiddleware } from "./middleware/RequestId.Middleware"
 import { PinoLogger } from "../providers/Logger.Provider"
+import cookieParser from "cookie-parser"
+import { sessionRoutes } from "./routes/session.routes"
 
 export class App {
   public readonly app: Application
@@ -13,6 +15,7 @@ export class App {
     this.middlewares()
     this.idHandling()
     this.routes()
+    this.cookieParse()
     this.errorHandling()
   }
 
@@ -29,6 +32,11 @@ export class App {
 
   private routes(): void {
     this.app.use("/users", userRoutes)
+    this.app.use("/sessions", sessionRoutes)
+  }
+
+  private cookieParse(): void {
+    this.app.use(cookieParser())
   }
 
   private errorHandling(): void {

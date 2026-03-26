@@ -1,10 +1,10 @@
 import type { PrismaClient } from "@prisma/client"
 import type { User } from "../../../domain/entities/user/User.Entity"
 import type { IUserRepository } from "../../../domain/repositories/User.Repository"
-import { UserMapper } from "../../mappers/User.mapper"
+import { UserMapper } from "../../mappers/repositories/User.Mapper"
 
 export class UserRepository implements IUserRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  public constructor(private readonly prisma: PrismaClient) {}
 
   public async create(user: User): Promise<User> {
     const prismaUser = UserMapper.toPrisma(user)

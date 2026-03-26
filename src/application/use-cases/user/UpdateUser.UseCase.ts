@@ -1,62 +1,48 @@
-import {
-  type UserError,
-  UserErrors
-} from "../../../domain/entities/user/errors/User.Errors"
+import { UserErrors } from "../../../domain/entities/user/errors/User.Errors"
 import type { UserRepository } from "../../../infrastructure/database/repositories/User.Repository"
-import type { BcryptHashProvider } from "../../../infrastructure/providers/BcryptHash.Provider"
+import type { IPasswordHasherProvider } from "../../providers/PasswordHasher.Provider"
 import { Result } from "../../../shared/core/Result"
 
 export class UpdateUserUseCase {
-  constructor(
+  public constructor(
     private readonly userRepository: UserRepository,
-    private readonly hashProvider: BcryptHashProvider
+    private readonly passwordHasherProvider: IPasswordHasherProvider
   ) {}
 
-  async execute(input: InputProps): Promise<OutputProps> {
+  public async execute(input: InputProps): Promise<OutputProps> {
     const user = await this.userRepository.findById(input.id)
-    if (!user) {
-      return { success: false, error: UserErrors.USER_NOT_FOUND }
-    }
-    const isValidPassword = this.hashProvider.compare(
-      input.password,
-      user.password
+    if (!user) return Result.fail(UserErrors.USER_NOT_FOUND)
+
+    const isValidPassword = this.passwordHasherProvider.compare(
+      user.password,
+      input.password
+    )
+    if (!isValidPassword) return Result.fail(UserErrors.INVALID_PASSWORD)
+
+    const newPassword = await this.passwordHasherProvider.generateHash(
+      input.password
     )
 
-    if (!isValidPassword) {
-      return { success: false, error: UserErrors.INVALID_PASSWORD }
-    }
-
-    const newPassword = await this.hashProvider.generateHash(input.password)
-
-    user.update(input.name, input.email, newPassword)
+    user.update(input.name || user.name, input.email || user.email, newPassword)
 
     const updatedUser = await this.userRepository.update(user)
+    if (!updatedUser) return Result.fail(UserErrors.USER_NOT_FOUND)
 
-    if (!updatedUser) {
-      return { success: false, error: UserErrors.USER_NOT_FOUND }
-    }
-
-    return {
-      data: {
-        name: updatedUser.name,
-        email: updatedUser.email
-      },
-      success: true
-    }
+    return Result.ok({
+      name: updatedUser.name,
+      email: updatedUser.email
+    })
   }
 }
 
 type InputProps = {
   id: string
-  name: string
-  email: string
+  name?: string
+  email?: string
   password: string
 }
 
-type OutputProps = Result<
-  {
-    name: string
-    email: string
-  },
-  UserError
->
+type OutputProps = Result<{
+  name: string
+  email: string
+}>

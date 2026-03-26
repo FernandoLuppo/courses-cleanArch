@@ -1,17 +1,22 @@
-export type Result<T, E> =
-  | { success: true; data: T }
-  | { success: false; error: E }
-
 export const Result = {
-  ok<T>(data: T): Result<T, never> {
+  ok<T>(data: T): Result<T> {
     return { success: true, data }
   },
 
-  okVoid(): Result<void, never> {
+  okVoid(): Result<void> {
     return { success: true, data: undefined }
   },
 
-  fail<E>(error: E): Result<never, E> {
+  fail(error: ResultError): Result<never> {
     return { success: false, error }
   }
 }
+
+type ResultError = {
+  code: string
+  message: string
+}
+
+export type Result<T> =
+  | { success: true; data: T }
+  | { success: false; error: ResultError }

@@ -1,24 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { NextFunction, Request, Response } from "express"
-import type { ILoggerProvider } from "../../../application/Provider/Logger.Provider"
+import type { Request, Response } from "express"
+import type { ILoggerProvider } from "../../../application/providers/Logger.Provider"
 import { AppError } from "../../../shared/errors/App.Error"
-import { HttpAdapterProvider } from "../../providers/HttpAdapter.Provider"
 
 export class ErrorMiddleware {
   constructor(private readonly logger: ILoggerProvider) {}
 
-  public handle(
-    error: Error,
-    req: Request,
-    res: Response,
-    _next: NextFunction
-  ) {
-    const adapter = new HttpAdapterProvider(req, res)
-    const requestId = adapter.requestId()
+  public handle(error: Error, req: Request, res: Response) {
+    const user = req.user ?? null
+    const requestId = req.requestId ?? null
 
     if (error instanceof AppError) {
       const logPayload = {
         event: "http_error",
+        user_id: user?.sub || null,
         request_id: requestId,
         method: req.method,
         path: req.path,
@@ -41,6 +35,7 @@ export class ErrorMiddleware {
 
     this.logger.error({
       event: "unexpected_error",
+      user_id: user?.sub || null,
       request_id: requestId,
       method: req.method,
       path: req.path,

@@ -1,8 +1,28 @@
 export const UserErrors = {
-  USER_NOT_FOUND: "USER_NOT_FOUND",
-  EMAIL_ALREADY_EXISTS: "EMAIL_ALREADY_EXISTS",
-  INVALID_PASSWORD: "INVALID_PASSWORD",
-  DEFAULT: "DEFAULT"
+  USER_NOT_FOUND: {
+    code: "USER_NOT_FOUND",
+    message: "User not found"
+  },
+  EMAIL_ALREADY_EXISTS: {
+    code: "EMAIL_ALREADY_EXISTS",
+    message: "Email already exists"
+  },
+  INVALID_PASSWORD: {
+    code: "INVALID_PASSWORD",
+    message: "Invalid password"
+  },
+  DEFAULT: {
+    code: "DEFAULT",
+    message: "Default error"
+  },
+  UNAUTHORIZED: {
+    code: "UNAUTHORIZED",
+    message: "Unauthorized"
+  },
+  BAD_REQUEST: {
+    code: "BAD_REQUEST",
+    message: "Bad request"
+  }
 } as const
 
 export type UserError = (typeof UserErrors)[keyof typeof UserErrors]

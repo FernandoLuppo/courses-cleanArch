@@ -1,30 +1,34 @@
-import { Request, Response, Router } from "express"
-import { deleteUserFactory } from "../factory/user/DeleteUser.Factory"
-import { createUserFactory } from "../factory/user/CreateUser.Factory"
-import { updateUserFactory } from "../factory/user/UpdateUser.Factory"
-import { GetUserFactory } from "../factory/user/GetUser.Factory"
+import { Router } from "express"
+
+import { createUserFactory } from "../../../factory/controller/user/CreateUser.Factory"
+import { updateUserFactory } from "../../../factory/controller/user/UpdateUser.Factory"
+import { GetUserFactory } from "../../../factory/controller/user/GetUser.Factory"
+import { deleteUserFactory } from "../../../factory/controller/user/DeleteUser.Factory"
+import { routeAdapter } from "../adapters/Route.Adapter"
+import { createUserValidation } from "../../../factory/middleware/user/CreateUser.Factory"
+import { adaptMiddleware } from "../adapters/Middleware.Adapter"
+import { updateUserValidation } from "../../../factory/middleware/user/UpdateUser.Factory"
+import { authMiddlewareFactory } from "../../../factory/middleware/session/Auth.Factory"
 
 const userRoutes = Router()
 
-const createUserController = createUserFactory()
-const deleteUserController = deleteUserFactory()
-const updateUserController = updateUserFactory()
-const getUserController = GetUserFactory()
-
-userRoutes.post("/create", (req: Request, res: Response) =>
-  createUserController.handle(req, res)
+userRoutes.post(
+  "/create",
+  adaptMiddleware(createUserValidation()),
+  routeAdapter(createUserFactory())
 )
 
-userRoutes.delete("/delete/:id", (req: Request, res: Response) =>
-  deleteUserController.handle(req, res)
+userRoutes.delete(
+  "/delete/:id",
+  adaptMiddleware(authMiddlewareFactory()),
+  routeAdapter(deleteUserFactory())
 )
-
-userRoutes.patch("/update/:id", (req: Request, res: Response) =>
-  updateUserController.handle(req, res)
+userRoutes.patch(
+  "/update/:id",
+  adaptMiddleware(authMiddlewareFactory()),
+  adaptMiddleware(updateUserValidation()),
+  routeAdapter(updateUserFactory())
 )
-
-userRoutes.get("/get/:id", (req: Request, res: Response) =>
-  getUserController.handle(req, res)
-)
+userRoutes.get("/get/:id", routeAdapter(GetUserFactory()))
 
 export { userRoutes }
