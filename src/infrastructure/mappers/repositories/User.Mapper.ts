@@ -10,7 +10,9 @@ export class UserMapper {
       password: user.password,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      role: user.role
+      role: user.role,
+      loginAttempts: user.loginAttempts,
+      lockUntil: user.lockUntil
     }
   }
 
@@ -22,7 +24,9 @@ export class UserMapper {
       prismaUser.password,
       prismaUser.createdAt,
       prismaUser.updatedAt,
-      prismaUser.role
+      prismaUser.role,
+      prismaUser.loginAttempts,
+      prismaUser.lockUntil
     )
   }
 }

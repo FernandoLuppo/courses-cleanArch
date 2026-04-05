@@ -10,12 +10,16 @@ export class UpdateUserUseCase {
   ) {}
 
   public async execute(input: InputProps): Promise<OutputProps> {
+    if (!input.id) {
+      return Result.fail(UserErrors.BAD_REQUEST)
+    }
+
     const user = await this.userRepository.findById(input.id)
     if (!user) return Result.fail(UserErrors.USER_NOT_FOUND)
 
-    const isValidPassword = this.passwordHasherProvider.compare(
-      user.password,
-      input.password
+    const isValidPassword = await this.passwordHasherProvider.compare(
+      input.password,
+      user.password
     )
     if (!isValidPassword) return Result.fail(UserErrors.INVALID_PASSWORD)
 

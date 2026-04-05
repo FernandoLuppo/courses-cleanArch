@@ -23,6 +23,10 @@ export const SessionErrors = {
     code: "UNAUTHORIZED",
     message: "Unauthorized"
   },
+  TOO_MANY_ATTEMPTS: {
+    code: "TOO_MANY_ATTEMPTS",
+    message: "Too many attempts. Try again later."
+  },
   DEFAULT: {
     code: "DEFAULT",
     message: "Default error"

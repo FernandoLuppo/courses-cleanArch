@@ -33,6 +33,20 @@ export class UserRepository implements IUserRepository {
     return UserMapper.toDomain(user)
   }
 
+  public async incrementFailedLogin(id: string): Promise<void> {
+    await this.prisma.$executeRaw`
+      UPDATE "User"
+      SET
+        loginAttempts = loginAttempts + 1,
+        lockUntil = CASE
+          WHEN loginAttempts + 1 >= 5
+          THEN NOW() + INTERVAL '15 minutes'
+          ELSE lockUntil
+        END
+      WHERE id = ${id}
+    `
+  }
+
   public async update(user: User): Promise<User | null> {
     const prismaUser = UserMapper.toPrisma(user)
     const updatedUser = await this.prisma.user.update({
@@ -40,5 +54,15 @@ export class UserRepository implements IUserRepository {
       data: prismaUser
     })
     return UserMapper.toDomain(updatedUser)
+  }
+
+  public async resetFailedLogin(id: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: {
+        loginAttempts: 0,
+        lockUntil: null
+      }
+    })
   }
 }

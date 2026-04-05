@@ -1,7 +1,10 @@
 import type { DeleteUserUseCase } from "../../../../application/use-cases/user/DeleteUser.UseCase"
 import { UserErrors } from "../../../../domain/entities/user/errors/User.Errors"
 import { Result } from "../../../../shared/core/Result"
-import { HttpAdapterContract } from "../../contracts/HttpAdapter.Contract"
+import {
+  AuthUser,
+  HttpAdapterContract
+} from "../../contracts/HttpAdapter.Contract"
 import { BaseController } from "../Base.Controller"
 
 export class DeleteUserController extends BaseController {
@@ -13,12 +16,9 @@ export class DeleteUserController extends BaseController {
     httpAdapter: HttpAdapterContract<unknown, DeleteUserParams>
   ) {
     const { id } = httpAdapter.params()
+    const { sub } = httpAdapter.user() as AuthUser
 
-    if (!id) {
-      return this.handleResult(Result.fail(UserErrors.BAD_REQUEST), httpAdapter)
-    }
-
-    const result = await this.deleteUserUseCase.execute({ id })
+    const result = await this.deleteUserUseCase.execute({ id, sub })
 
     return this.handleResult(result, httpAdapter)
   }

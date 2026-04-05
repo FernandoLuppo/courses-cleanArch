@@ -8,5 +8,10 @@ export const HttpErrors = {
     code: "BAD_REQUEST",
     message: "Bad request",
     success: false
+  },
+  TOO_MANY_REQUESTS: {
+    code: "TOO_MANY_REQUESTS",
+    message: "Too many requests, please try again latter",
+    success: false
   }
 }

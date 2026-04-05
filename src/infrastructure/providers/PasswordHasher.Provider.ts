@@ -4,7 +4,7 @@ import argon2 from "argon2"
 export class PasswordHasherProvider implements IPasswordHasherProvider {
   private readonly pepper = process.env.PASSWORD_PEPPER
 
-  public async compare(hashed: string, password: string): Promise<boolean> {
+  public async compare(password: string, hashed: string): Promise<boolean> {
     return argon2.verify(hashed, password + this.pepper)
   }
 

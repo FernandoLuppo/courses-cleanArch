@@ -6,12 +6,14 @@ import { logoutFactory } from "../../../factory/controller/session/Logout.Factor
 import { adaptMiddleware } from "../adapters/Middleware.Adapter"
 import { authMiddlewareFactory } from "../../../factory/middleware/session/Auth.Factory"
 import { loginValidation } from "../../../factory/middleware/session/Login.Factory"
+import { rateLimiterFactory } from "../../../factory/middleware/rate-limiter/RateLimiter.Factory"
 
 const sessionRoutes = Router()
 
 sessionRoutes.post("/refresh", routeAdapter(rotateSessionFactory()))
 sessionRoutes.post(
   "/login",
+  adaptMiddleware(rateLimiterFactory.authRoutes()),
   adaptMiddleware(loginValidation()),
   routeAdapter(loginFactory())
 )

@@ -18,8 +18,7 @@ export class RotateSessionUseCase {
       return Result.fail(SessionErrors.REFRESH_TOKEN_NOT_FOUND)
 
     const sha256Hash = this.hashGeneratorProvider.hash(input.refreshToken)
-    const session =
-      await this.sessionRepository.findByRefreshTokenHash(sha256Hash)
+    const session = await this.sessionRepository.findByTokenHash(sha256Hash)
 
     if (!session) return Result.fail(SessionErrors.SESSION_NOT_FOUND)
     if (session.isExpired()) return Result.fail(SessionErrors.SESSION_EXPIRED)

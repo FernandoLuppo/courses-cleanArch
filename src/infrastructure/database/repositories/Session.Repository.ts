@@ -8,7 +8,7 @@ export class SessionRepository implements ISessionRepository {
 
   public async createSession(data: {
     userId: string
-    refreshTokenHash: string
+    tokenHash: string
     userAgent?: string
     ip?: string
     expiresAt: Date
@@ -20,11 +20,9 @@ export class SessionRepository implements ISessionRepository {
     return SessionMapper.toDomain(session)
   }
 
-  public async findByRefreshTokenHash(
-    refreshTokenHash: string
-  ): Promise<Session | null> {
+  public async findByTokenHash(tokenHash: string): Promise<Session | null> {
     const session = await this.prisma.session.findFirst({
-      where: { refreshTokenHash }
+      where: { tokenHash }
     })
 
     if (!session) return null
@@ -43,12 +41,12 @@ export class SessionRepository implements ISessionRepository {
 
   public async rotateRefreshToken(
     sessionId: string,
-    newRefreshTokenHash: string
+    newTokenHash: string
   ): Promise<void> {
     await this.prisma.session.update({
       where: { id: sessionId },
       data: {
-        refreshTokenHash: newRefreshTokenHash,
+        tokenHash: newTokenHash,
         lastUsedAt: new Date()
       }
     })

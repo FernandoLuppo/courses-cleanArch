@@ -1,7 +1,7 @@
 export class Session {
   private readonly _id: string
   private readonly _userId: string
-  private readonly _refreshTokenHash: string
+  private readonly _tokenHash: string
   private _isRevoked: boolean
   private readonly _expiresAt: Date
   private readonly _userAgent: string | null
@@ -13,7 +13,7 @@ export class Session {
   public constructor(
     id: string,
     userId: string,
-    refreshTokenHash: string,
+    tokenHash: string,
     isRevoked: boolean,
     expiresAt: Date,
     userAgent: string | null,
@@ -24,7 +24,7 @@ export class Session {
   ) {
     this._id = id
     this._userId = userId
-    this._refreshTokenHash = refreshTokenHash
+    this._tokenHash = tokenHash
     this._isRevoked = isRevoked
     this._expiresAt = expiresAt
     this._userAgent = userAgent
@@ -45,7 +45,7 @@ export class Session {
   static restore(
     id: string,
     userId: string,
-    refreshTokenHash: string,
+    tokenHash: string,
     userAgent: string | null,
     ip: string | null,
     expiresAt: Date,
@@ -57,7 +57,7 @@ export class Session {
     return new Session(
       id,
       userId,
-      refreshTokenHash,
+      tokenHash,
       isRevoked,
       expiresAt,
       userAgent,
@@ -74,8 +74,8 @@ export class Session {
   get userId(): string {
     return this._userId
   }
-  get refreshTokenHash(): string {
-    return this._refreshTokenHash
+  get tokenHash(): string {
+    return this._tokenHash
   }
   get isRevoked(): boolean {
     return this._isRevoked

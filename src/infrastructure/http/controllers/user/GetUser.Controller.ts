@@ -1,7 +1,8 @@
 import type { GetUSerUseCase } from "../../../../application/use-cases/user/GetUser.UseCase"
-import { UserErrors } from "../../../../domain/entities/user/errors/User.Errors"
-import { Result } from "../../../../shared/core/Result"
-import { HttpAdapterContract } from "../../contracts/HttpAdapter.Contract"
+import {
+  AuthUser,
+  HttpAdapterContract
+} from "../../contracts/HttpAdapter.Contract"
 import { BaseController } from "../Base.Controller"
 
 export class GetUserController extends BaseController {
@@ -10,16 +11,9 @@ export class GetUserController extends BaseController {
   }
 
   public async handle(httpAdapter: HttpAdapterContract) {
-    const userId = httpAdapter.user()?.sub
+    const { sub } = httpAdapter.user() as AuthUser
 
-    if (!userId) {
-      return this.handleResult(
-        Result.fail(UserErrors.UNAUTHORIZED),
-        httpAdapter
-      )
-    }
-
-    const result = await this.getUserUseCase.execute({ id: userId })
+    const result = await this.getUserUseCase.execute({ id: sub })
 
     return this.handleResult(result, httpAdapter)
   }

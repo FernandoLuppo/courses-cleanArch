@@ -5,7 +5,7 @@ import { HttpAdapterContract } from "../contracts/HttpAdapter.Contract"
 export class ValidateMiddleware implements MiddlewareContract {
   constructor(private readonly schema: ZodSchema) {}
 
-  public handle(httpAdapter: HttpAdapterContract): void {
+  public async handle(httpAdapter: HttpAdapterContract): Promise<void> {
     const result = this.schema.safeParse(httpAdapter.body())
 
     if (!result.success) {

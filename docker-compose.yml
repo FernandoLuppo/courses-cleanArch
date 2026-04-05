@@ -14,6 +14,18 @@ services:
     networks:
       - dot_network
 
+  redis:
+    image: redis:7
+    container_name: dot_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - dot_network
+
   api:
     build:
       context: .
@@ -22,6 +34,7 @@ services:
     restart: always
     depends_on:
       - postgres
+      - redis
     env_file:
       - .env.docker
     ports:
@@ -35,6 +48,7 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
   dot_network:

@@ -6,6 +6,8 @@ export class User {
   private readonly _createdAt: Date
   private _updatedAt: Date
   private _role: Role
+  private _loginAttempts: number
+  private _lockUntil: Date | null
 
   public constructor(
     id: string,
@@ -14,7 +16,9 @@ export class User {
     password: string,
     createdAt: Date,
     updatedAt: Date,
-    role: Role
+    role: Role,
+    loginAttempts: number,
+    lockUntil: Date | null
   ) {
     this._id = id
     this._name = name
@@ -23,6 +27,8 @@ export class User {
     this._createdAt = createdAt
     this._updatedAt = updatedAt
     this._role = role
+    this._loginAttempts = loginAttempts
+    this._lockUntil = lockUntil
   }
 
   static restore(
@@ -32,9 +38,21 @@ export class User {
     password: string,
     createdAt: Date,
     updatedAt: Date,
-    role: Role
+    role: Role,
+    loginAttempts: number,
+    lockUntil: Date | null
   ): User {
-    return new User(id, name, email, password, createdAt, updatedAt, role)
+    return new User(
+      id,
+      name,
+      email,
+      password,
+      createdAt,
+      updatedAt,
+      role,
+      loginAttempts,
+      lockUntil
+    )
   }
 
   static create(
@@ -44,7 +62,17 @@ export class User {
     password: string
   ): User {
     const newDate = new Date()
-    return new User(id, name, email, password, newDate, newDate, "USER")
+    return new User(
+      id,
+      name,
+      email,
+      password,
+      newDate,
+      newDate,
+      "USER",
+      0,
+      null
+    )
   }
 
   static createAdmin(
@@ -54,7 +82,17 @@ export class User {
     password: string
   ): User {
     const newDate = new Date()
-    return new User(id, name, email, password, newDate, newDate, "ADMIN")
+    return new User(
+      id,
+      name,
+      email,
+      password,
+      newDate,
+      newDate,
+      "ADMIN",
+      0,
+      null
+    )
   }
 
   public update(name: string, email: string, password: string): void {
@@ -62,6 +100,15 @@ export class User {
     this._email = email
     this._password = password
     this._updatedAt = new Date()
+  }
+
+  public canLogin(): boolean {
+    return !this._lockUntil || this._lockUntil < new Date()
+  }
+
+  public registerSuccessfulLogin(): void {
+    this._loginAttempts = 0
+    this._lockUntil = null
   }
 
   get id() {
@@ -84,6 +131,12 @@ export class User {
   }
   get role() {
     return this._role
+  }
+  get loginAttempts() {
+    return this._loginAttempts
+  }
+  get lockUntil() {
+    return this._lockUntil
   }
 }
 

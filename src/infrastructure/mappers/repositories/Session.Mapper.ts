@@ -6,7 +6,7 @@ export class SessionMapper {
     return {
       id: session.id,
       userId: session.userId,
-      refreshTokenHash: session.refreshTokenHash,
+      tokenHash: session.tokenHash,
       userAgent: session.userAgent,
       ip: session.ip,
       expiresAt: session.expiresAt,
@@ -21,7 +21,7 @@ export class SessionMapper {
     return Session.restore(
       prismaSession.id,
       prismaSession.userId,
-      prismaSession.refreshTokenHash,
+      prismaSession.tokenHash,
       prismaSession.userAgent,
       prismaSession.ip,
       prismaSession.expiresAt,

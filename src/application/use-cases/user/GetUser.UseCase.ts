@@ -6,6 +6,10 @@ export class GetUSerUseCase {
   public constructor(private readonly userRepository: IUserRepository) {}
 
   public async execute(input: InputProps): Promise<OutputProps> {
+    if (!input.id) {
+      return Result.fail(UserErrors.BAD_REQUEST)
+    }
+
     const user = await this.userRepository.findById(input.id)
     if (!user) return Result.fail(UserErrors.USER_NOT_FOUND)
 

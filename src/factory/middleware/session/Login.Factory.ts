@@ -1,5 +1,5 @@
-import { ValidateMiddleware } from "../../../middleware/Validate.Middleware"
-import { loginSchema } from "../../../schemas/session/Login.Schema"
+import { ValidateMiddleware } from "../../../infrastructure/http/middleware/Validate.Middleware"
+import { loginSchema } from "../../../infrastructure/http/schemas/session/Login.Schema"
 
 export function loginValidation() {
   return new ValidateMiddleware(loginSchema)

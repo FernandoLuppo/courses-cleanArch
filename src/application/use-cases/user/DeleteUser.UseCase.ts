@@ -6,8 +6,13 @@ export class DeleteUserUseCase {
   public constructor(private readonly userRepository: IUserRepository) {}
 
   public async execute(input: InputProps): Promise<OutputProps> {
-    const user = await this.userRepository.findById(input.id)
-    if (!user) return Result.fail(UserErrors.USER_NOT_FOUND)
+    if (!input.id) {
+      return Result.fail(UserErrors.BAD_REQUEST)
+    }
+
+    if (input.id !== input.sub) {
+      return Result.fail(UserErrors.UNAUTHORIZED)
+    }
 
     const deletedUser = await this.userRepository.delete(input.id)
     if (!deletedUser) return Result.fail(UserErrors.DEFAULT)
@@ -16,6 +21,6 @@ export class DeleteUserUseCase {
   }
 }
 
-type InputProps = { id: string }
+type InputProps = { id: string; sub: string }
 
 type OutputProps = Result<void>

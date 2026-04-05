@@ -10,6 +10,7 @@ export interface HttpAdapterContract<
   params(): TParams
   query(): TQuery
   headers(): Record<string, string | string[] | undefined>
+  setHeader(name: string, value: string): void
 
   user(): AuthUser | null
   setUser(user: AuthUser): void

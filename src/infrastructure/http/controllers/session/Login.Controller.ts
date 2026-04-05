@@ -16,18 +16,8 @@ export class LoginController extends BaseController {
 
   public async handle(httpAdapter: HttpAdapterContract<LoginDTO>) {
     const { email, password } = httpAdapter.body()
-    const userAgent = httpAdapter.userAgent()
-    const ip = httpAdapter.ip()
-
-    if (!userAgent || !ip) {
-      return this.handleResult(
-        Result.fail({
-          code: "BAD_REQUEST",
-          message: "Bad request"
-        }),
-        httpAdapter
-      )
-    }
+    const userAgent = httpAdapter.userAgent() as string
+    const ip = httpAdapter.ip() as string
 
     const result = await this.loginUseCase.execute({
       email,

@@ -6,4 +6,6 @@ export interface IUserRepository {
   delete(id: string): Promise<boolean>
   findById(id: string): Promise<User | null>
   findByEmail(email: string): Promise<User | null>
+  incrementFailedLogin(id: string): Promise<void>
+  resetFailedLogin(id: string): Promise<void>
 }

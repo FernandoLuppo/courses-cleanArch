@@ -24,6 +24,10 @@ export class HttpAdapter<
     this.request.body = data
   }
 
+  public setHeader(name: string, value: string): void {
+    this.response.setHeader(name, value)
+  }
+
   public headers(): Record<string, string | string[] | undefined> {
     return this.request.headers
   }

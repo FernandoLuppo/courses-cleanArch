@@ -1,7 +1,7 @@
 import pino from "pino"
 import { ILoggerProvider } from "../../application/providers/Logger.Provider"
 
-export class PinoLogger implements ILoggerProvider {
+export class LoggerProvider implements ILoggerProvider {
   private readonly logger = pino({
     level: process.env.LOG_LEVEL || "info",
     transport:

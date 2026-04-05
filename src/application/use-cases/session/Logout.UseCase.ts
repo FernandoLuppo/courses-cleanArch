@@ -15,11 +15,12 @@ export class LogoutUseCase {
 
     const refreshTokenHash = this.hashGeneratorProvider.hash(input.refreshToken)
     const session =
-      await this.sessionRepository.findByRefreshTokenHash(refreshTokenHash)
+      await this.sessionRepository.findByTokenHash(refreshTokenHash)
 
     if (!session) return Result.fail(SessionErrors.SESSION_NOT_FOUND)
 
     await this.sessionRepository.revoke(session.id)
+    await this.sessionRepository.rotateRefreshToken(session.id, "")
     return Result.okVoid()
   }
 }
