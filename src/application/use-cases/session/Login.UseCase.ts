@@ -116,6 +116,7 @@ export class LoginUseCase {
       role: user.role,
       sessionId: session.id
     })
+
     return Result.ok({
       accessToken,
       refreshToken

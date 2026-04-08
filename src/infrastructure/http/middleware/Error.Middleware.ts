@@ -1,11 +1,12 @@
-import type { Request, Response } from "express"
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import type { NextFunction, Request, Response } from "express"
 import type { ILoggerProvider } from "../../../application/providers/Logger.Provider"
 import { AppError } from "../../../shared/errors/App.Error"
 
 export class ErrorMiddleware {
   constructor(private readonly logger: ILoggerProvider) {}
 
-  public handle(error: Error, req: Request, res: Response) {
+  public handle(error: Error, req: Request, res: Response, next: NextFunction) {
     const user = req.user ?? null
     const requestId = req.requestId ?? null
 

@@ -1,10 +1,10 @@
-import { createClient } from "redis"
 import { ILoggerProvider } from "../../application/providers/Logger.Provider"
+import Redis from "ioredis"
 
-type RedisClient = ReturnType<typeof createClient>
+export type RedisClientType = Redis
 
 export class RedisConnection {
-  private static client: RedisClient
+  private static redisClient: RedisClientType
   private static logger?: ILoggerProvider
 
   public static setLogger(logger: ILoggerProvider) {
@@ -12,24 +12,20 @@ export class RedisConnection {
   }
 
   public static async connect(): Promise<void> {
-    const client = createClient({
-      url: process.env.REDIS_URL
-    })
+    const client = new Redis(process.env.REDIS_URL as string)
 
     client.on("error", error => {
       this.logger?.error(`Redis error: ${error}`)
     })
 
-    await client.connect()
-
-    this.client = client
+    this.redisClient = client
   }
 
-  public static getClient(): RedisClient {
-    if (!this.client) {
+  public static getClient(): RedisClientType {
+    if (!this.redisClient) {
       throw new Error("Redis not connected")
     }
 
-    return this.client
+    return this.redisClient
   }
 }

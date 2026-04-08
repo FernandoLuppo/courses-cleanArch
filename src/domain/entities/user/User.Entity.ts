@@ -95,10 +95,8 @@ export class User {
     )
   }
 
-  public update(name: string, email: string, password: string): void {
+  public update(name: string): void {
     this._name = name
-    this._email = email
-    this._password = password
     this._updatedAt = new Date()
   }
 

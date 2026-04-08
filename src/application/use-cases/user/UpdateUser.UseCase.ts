@@ -23,12 +23,7 @@ export class UpdateUserUseCase {
     )
     if (!isValidPassword) return Result.fail(UserErrors.INVALID_PASSWORD)
 
-    const newPassword = await this.passwordHasherProvider.generateHash(
-      input.password
-    )
-
-    user.update(input.name || user.name, input.email || user.email, newPassword)
-
+    user.update(input.name)
     const updatedUser = await this.userRepository.update(user)
     if (!updatedUser) return Result.fail(UserErrors.USER_NOT_FOUND)
 
@@ -41,8 +36,8 @@ export class UpdateUserUseCase {
 
 type InputProps = {
   id: string
-  name?: string
-  email?: string
+  name: string
+  email: string
   password: string
 }
 

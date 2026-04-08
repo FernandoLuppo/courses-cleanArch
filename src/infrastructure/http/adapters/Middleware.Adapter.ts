@@ -7,7 +7,6 @@ export const adaptMiddleware = (middleware: {
 }) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const httpAdapter = new HttpAdapter(req, res, next)
-
     await middleware.handle(httpAdapter)
   }
 }

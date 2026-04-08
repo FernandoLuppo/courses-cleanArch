@@ -16,7 +16,6 @@ export class AuthMiddleware {
       const payload = this.tokenProvider.verifyAccessToken(accessToken)
 
       httpAdapter.setUser(payload)
-
       httpAdapter.next()
     } catch {
       return httpAdapter.send(401, HttpErrors.UNAUTHORIZED)

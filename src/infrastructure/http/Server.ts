@@ -1,5 +1,5 @@
 import { ILoggerProvider } from "../../application/providers/Logger.Provider"
-import { RedisConnection } from "../redis/RedisClient"
+import { RedisClientType, RedisConnection } from "../redis/RedisClient"
 import { App } from "./App"
 
 export class Server {
@@ -17,13 +17,16 @@ export class Server {
     await RedisConnection.connect()
   }
 
-  private initializeApp(): void {
-    this.app = new App()
+  private initializeApp(redisClient: RedisClientType): void {
+    this.app = new App(redisClient)
   }
 
   public async start(): Promise<void> {
     await this.initializeInfra()
-    this.initializeApp()
+
+    const redisClient = RedisConnection.getClient()
+
+    this.initializeApp(redisClient)
 
     this.app.app.listen(this.port, () => {
       console.log(`🚀 Server running on port ${this.port}`)

@@ -32,14 +32,16 @@ export class LoginController extends BaseController {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: ACCESS_TOKEN_EXPIRE_IN
+      maxAge: ACCESS_TOKEN_EXPIRE_IN,
+      path: "/"
     })
 
     httpAdapter.setCookie("refreshToken", result.data.refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: REFRESH_TOKEN_EXPIRE_IN
+      maxAge: REFRESH_TOKEN_EXPIRE_IN,
+      path: "/"
     })
 
     return this.handleResult(Result.okVoid(), httpAdapter)

@@ -9,27 +9,36 @@ import { adaptMiddleware } from "../adapters/Middleware.Adapter"
 import { updateUserValidation } from "../../../factory/middleware/user/UpdateUser.Factory"
 import { authMiddlewareFactory } from "../../../factory/middleware/session/Auth.Factory"
 import { rateLimiterFactory } from "../../../factory/middleware/rate-limiter/RateLimiter.Factory"
+import { RedisClientType } from "../../redis/RedisClient"
 
-const userRoutes = Router()
+export function createUserRoutes(redisClient: RedisClientType) {
+  const router = Router()
 
-userRoutes.post(
-  "/create",
-  adaptMiddleware(rateLimiterFactory.authRoutes()),
-  adaptMiddleware(createUserValidation()),
-  routeAdapter(createUserFactory())
-)
+  router.post(
+    "/create",
+    adaptMiddleware(rateLimiterFactory.authRoutes(redisClient)),
+    adaptMiddleware(createUserValidation()),
+    routeAdapter(createUserFactory())
+  )
 
-userRoutes.delete(
-  "/delete/:id",
-  adaptMiddleware(authMiddlewareFactory()),
-  routeAdapter(deleteUserFactory())
-)
-userRoutes.patch(
-  "/update/:id",
-  adaptMiddleware(authMiddlewareFactory()),
-  adaptMiddleware(updateUserValidation()),
-  routeAdapter(updateUserFactory())
-)
-userRoutes.get("/get/:id", routeAdapter(GetUserFactory()))
+  router.delete(
+    "/delete/:id",
+    adaptMiddleware(authMiddlewareFactory()),
+    routeAdapter(deleteUserFactory())
+  )
 
-export { userRoutes }
+  router.patch(
+    "/update/:id",
+    adaptMiddleware(authMiddlewareFactory()),
+    adaptMiddleware(updateUserValidation()),
+    routeAdapter(updateUserFactory())
+  )
+
+  router.get(
+    "/get/:id",
+    adaptMiddleware(authMiddlewareFactory()),
+    routeAdapter(GetUserFactory())
+  )
+
+  return router
+}

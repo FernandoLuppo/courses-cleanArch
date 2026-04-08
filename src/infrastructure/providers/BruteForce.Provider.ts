@@ -91,10 +91,7 @@ export class BruteForceProvider implements IBruteForceProvider {
     const token = randomUUID()
 
     for (let i = 0; i < MAX_RETRIES; i++) {
-      const acquired = await client.set(lockKey, token, {
-        NX: true,
-        EX: 10
-      })
+      const acquired = await client.set(lockKey, token, "EX", 10, "NX")
 
       if (acquired) {
         try {

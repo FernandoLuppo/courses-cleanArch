@@ -7,20 +7,25 @@ import { adaptMiddleware } from "../adapters/Middleware.Adapter"
 import { authMiddlewareFactory } from "../../../factory/middleware/session/Auth.Factory"
 import { loginValidation } from "../../../factory/middleware/session/Login.Factory"
 import { rateLimiterFactory } from "../../../factory/middleware/rate-limiter/RateLimiter.Factory"
+import { RedisClientType } from "../../redis/RedisClient"
 
-const sessionRoutes = Router()
+export function createSessionRoutes(redisClient: RedisClientType) {
+  const router = Router()
 
-sessionRoutes.post("/refresh", routeAdapter(rotateSessionFactory()))
-sessionRoutes.post(
-  "/login",
-  adaptMiddleware(rateLimiterFactory.authRoutes()),
-  adaptMiddleware(loginValidation()),
-  routeAdapter(loginFactory())
-)
-sessionRoutes.post(
-  "/logout",
-  adaptMiddleware(authMiddlewareFactory()),
-  routeAdapter(logoutFactory())
-)
+  router.get("/refresh", routeAdapter(rotateSessionFactory()))
 
-export { sessionRoutes }
+  router.post(
+    "/login",
+    adaptMiddleware(rateLimiterFactory.authRoutes(redisClient)),
+    adaptMiddleware(loginValidation()),
+    routeAdapter(loginFactory())
+  )
+
+  router.get(
+    "/logout",
+    adaptMiddleware(authMiddlewareFactory()),
+    routeAdapter(logoutFactory())
+  )
+
+  return router
+}

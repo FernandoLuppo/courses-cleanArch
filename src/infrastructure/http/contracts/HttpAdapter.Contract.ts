@@ -38,4 +38,5 @@ export type CookieOptions = {
   secure?: boolean
   sameSite?: "strict" | "lax" | "none"
   maxAge?: number
+  path?: string
 }

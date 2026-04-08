@@ -18,7 +18,7 @@ export class UserRepository implements IUserRepository {
   }
 
   public async findById(id: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({ where: { id } })
+    const user = await this.prisma.user.findFirst({ where: { id } })
     if (!user) {
       return null
     }
@@ -26,7 +26,8 @@ export class UserRepository implements IUserRepository {
   }
 
   public async findByEmail(email: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({ where: { email } })
+    const user = await this.prisma.user.findFirst({ where: { email } })
+
     if (!user) {
       return null
     }
