@@ -1,6 +1,4 @@
 import type { DeleteUserUseCase } from "../../../../application/use-cases/user/DeleteUser.UseCase"
-import { UserErrors } from "../../../../domain/entities/user/errors/User.Errors"
-import { Result } from "../../../../shared/core/Result"
 import {
   AuthUser,
   HttpAdapterContract
