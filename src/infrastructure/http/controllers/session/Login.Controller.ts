@@ -44,7 +44,7 @@ export class LoginController extends BaseController {
       path: "/"
     })
 
-    return this.handleResult(Result.okVoid(), httpAdapter)
+    return this.handleResult(Result.ok(result.data.user), httpAdapter)
   }
 }
 

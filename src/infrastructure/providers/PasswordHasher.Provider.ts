@@ -11,10 +11,13 @@ export class PasswordHasherProvider implements IPasswordHasherProvider {
   public async generateHash(password: string): Promise<string> {
     const argon = argon2.hash(password + this.pepper, {
       type: argon2.argon2id,
-      memoryCost: 2 ** 16, // 64MB
-      timeCost: 3,
-      parallelism: 2
+      memoryCost: 2 ** 14, // 16MB
+      timeCost: 2,
+      parallelism: 1
     })
     return argon
   }
 }
+
+// sob alta carga, o custo do Argon2 impacta latência;
+// em produção, poderia ser mitigado com controle de concorrência ou scaling horizontal

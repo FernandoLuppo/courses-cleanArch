@@ -9,7 +9,7 @@ import { loginValidation } from "../../../factory/middleware/session/Login.Facto
 import { rateLimiterFactory } from "../../../factory/middleware/rate-limiter/RateLimiter.Factory"
 import { RedisClientType } from "../../redis/RedisClient"
 
-export function createSessionRoutes(redisClient: RedisClientType) {
+export function sessionRoutes(redisClient: RedisClientType) {
   const router = Router()
 
   router.get("/refresh", routeAdapter(rotateSessionFactory()))

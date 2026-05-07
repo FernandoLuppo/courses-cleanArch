@@ -18,7 +18,7 @@ export class UserRepository implements IUserRepository {
   }
 
   public async findById(id: string): Promise<User | null> {
-    const user = await this.prisma.user.findFirst({ where: { id } })
+    const user = await this.prisma.user.findUnique({ where: { id } })
     if (!user) {
       return null
     }
@@ -26,7 +26,7 @@ export class UserRepository implements IUserRepository {
   }
 
   public async findByEmail(email: string): Promise<User | null> {
-    const user = await this.prisma.user.findFirst({ where: { email } })
+    const user = await this.prisma.user.findUnique({ where: { email } })
 
     if (!user) {
       return null
@@ -38,13 +38,13 @@ export class UserRepository implements IUserRepository {
     await this.prisma.$executeRaw`
       UPDATE "User"
       SET
-        loginAttempts = loginAttempts + 1,
-        lockUntil = CASE
-          WHEN loginAttempts + 1 >= 5
+        "loginAttempts" = "loginAttempts" + 1,
+        "lockUntil" = CASE
+          WHEN "loginAttempts" + 1 >= 5
           THEN NOW() + INTERVAL '15 minutes'
-          ELSE lockUntil
+          ELSE "lockUntil"
         END
-      WHERE id = ${id}
+      WHERE "id" = ${id}
     `
   }
 

@@ -1,0 +1,66 @@
+services:
+  postgres_test:
+    image: postgres:15
+    container_name: dot_postgres_test
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    networks:
+      - dot_network
+
+  redis_test:
+    image: redis:7
+    container_name: dot_redis_test
+    restart: always
+    ports:
+      - "6380:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_test_data:/data
+    networks:
+      - dot_network
+
+  api_test:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    container_name: dot_api_test
+    depends_on:
+      - postgres_test
+      - redis_test
+    env_file:
+      - .env.test
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: yarn dev
+    networks:
+      - dot_network
+
+  k6:
+    image: grafana/k6
+    container_name: dot_k6
+    depends_on:
+      - api_test
+    volumes:
+      - .:/app
+    working_dir: /app
+    entrypoint: [ "k6" ]
+    networks:
+      - dot_network
+
+volumes:
+  postgres_test_data:
+  redis_test_data:
+
+networks:
+  dot_network:
+    driver: bridge

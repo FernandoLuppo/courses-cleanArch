@@ -6,3 +6,4 @@ export const loginSchema = z
   .merge(DefaultSchema)
   .pick({ email: true, password: true })
   .required()
+  .strict()

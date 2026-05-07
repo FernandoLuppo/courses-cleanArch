@@ -448,6 +448,11 @@
     "@types/ms" "*"
     "@types/node" "*"
 
+"@types/k6@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@types/k6/-/k6-1.7.0.tgz#b74c9a0440e57a60596eda988c69c13a419b358c"
+  integrity sha512-oL4mckVcOPIA2HUrCVj3aQXCJgCqsQe35Uc4fRTffmrQuR24v92GJImnagqUaRnC1TQVJFx85o3aHQPP+0bxpg==
+
 "@types/ms@*":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-2.1.0.tgz#052aa67a48eccc4309d7f0191b7e41434b90bb78"

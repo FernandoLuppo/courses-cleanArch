@@ -1,15 +1,19 @@
-import { RateLimiterRedis } from "rate-limiter-flexible"
+import { RateLimiterMemory, RateLimiterRedis } from "rate-limiter-flexible"
 import { HttpAdapterContract } from "../contracts/HttpAdapter.Contract"
 import { HttpErrors } from "../errors/HttpErrors"
 
 export class RateLimitMiddleware {
-  constructor(private readonly rateLimiter: RateLimiterRedis) {}
+  constructor(
+    private readonly rateLimiter: RateLimiterRedis | RateLimiterMemory
+  ) {}
 
   public async handle(httpAdapter: HttpAdapterContract): Promise<void> {
     try {
       const ip = httpAdapter.ip() || "unknown"
 
-      await this.rateLimiter.consume(ip)
+      if (process.env.IS_PERFORMANCE_TEST !== "true") {
+        await this.rateLimiter.consume(ip)
+      }
 
       return httpAdapter.next()
     } catch (error: unknown) {

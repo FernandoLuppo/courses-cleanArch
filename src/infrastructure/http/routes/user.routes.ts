@@ -11,7 +11,7 @@ import { authMiddlewareFactory } from "../../../factory/middleware/session/Auth.
 import { rateLimiterFactory } from "../../../factory/middleware/rate-limiter/RateLimiter.Factory"
 import { RedisClientType } from "../../redis/RedisClient"
 
-export function createUserRoutes(redisClient: RedisClientType) {
+export function userRoutes(redisClient: RedisClientType) {
   const router = Router()
 
   router.post(
@@ -35,7 +35,7 @@ export function createUserRoutes(redisClient: RedisClientType) {
   )
 
   router.get(
-    "/get/:id",
+    "/get-one/:id",
     adaptMiddleware(authMiddlewareFactory()),
     routeAdapter(GetUserFactory())
   )

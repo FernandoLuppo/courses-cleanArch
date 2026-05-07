@@ -1,5 +1,6 @@
-.env
+.env*
 node_modules
 todo.md
-commands.txt
-must-have.md
+commands.md
+dist
+tests/k6/src/data/*

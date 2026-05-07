@@ -9,7 +9,16 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "typecheck": "tsc --noEmit",
+    "k6:build": "rm -rf tests/k6/dist && tsc -p tests/k6/tsconfig.json",
+    "k6": "yarn k6:build && docker compose -f docker-compose.test.yml run --rm k6 run",
+    "docker:dev": "docker compose up -d --build",
+    "docker:dev:down": "docker compose down",
+    "docker:test": "docker compose --env-file .env.test -f docker-compose.test.yml up -d --build",
+    "docker:test:down": "docker compose -f docker-compose.test.yml down"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.2",
@@ -35,6 +44,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/k6": "^1.7.0",
     "@types/node": "^25.2.3",
     "@types/pg": "^8.20.0",
     "dotenv": "^17.3.1",
@@ -47,5 +57,8 @@
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.0"
+  },
+  "prisma": {
+    "seed": "ts-node src/prisma/seed.ts"
   }
 }

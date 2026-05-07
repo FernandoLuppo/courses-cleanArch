@@ -119,7 +119,12 @@ export class LoginUseCase {
 
     return Result.ok({
       accessToken,
-      refreshToken
+      refreshToken,
+      user: {
+        email: user.email,
+        name: user.name,
+        id: user.id
+      }
     })
   }
 }
@@ -131,9 +136,14 @@ type InputProps = {
   ip: string
 }
 
-type Tokens = {
-  accessToken: string
-  refreshToken: string
+type User = {
+  id: string
+  email: string
+  name: string
 }
 
-type OutputProps = Result<Tokens>
+type OutputProps = Result<{
+  accessToken: string
+  refreshToken: string
+  user: User
+}>
